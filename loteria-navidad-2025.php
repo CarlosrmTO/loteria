@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Loteria Navidad 2025 - V5 (Event Delegation)
  * Description: Widgets de lotería robustos usando Event Delegation para evitar conflictos JS.
- * Version: 5.2 (Debug Mode)
+ * Version: 5.3 (Stealth Mode)
  * Author: Cascade AI
  */
 
@@ -45,8 +45,19 @@ function loteria_navidad_proxy_handler_v5($request) {
     if ($cached) return rest_ensure_response(json_decode($cached));
 
     $response = wp_remote_get($endpoints[$type], [
-        'timeout' => 5,
-        'user-agent' => 'Mozilla/5.0 (WordPress; LoteriaNavidadPlugin/1.0)'
+        'timeout' => 10,
+        'headers' => [
+            'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+            'Accept-Language' => 'es-ES,es;q=0.9',
+            'Referer' => 'https://www.loteriasyapuestas.es/',
+            'Connection' => 'keep-alive',
+            'Upgrade-Insecure-Requests' => '1',
+            'Sec-Fetch-Dest' => 'document',
+            'Sec-Fetch-Mode' => 'navigate',
+            'Sec-Fetch-Site' => 'none',
+            'Sec-Fetch-User' => '?1'
+        ]
     ]);
     if (is_wp_error($response)) return new WP_Error('api_error', $response->get_error_message(), ['status' => 500]);
 
