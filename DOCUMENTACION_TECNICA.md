@@ -38,6 +38,37 @@ Es normal que la URL contenga la palabra `Provisional`. **Este es el endpoint co
 
 **ID Sorteo Configurado:** `1259409103` (Navidad 2025)
 
+## ⚠️ PROBLEMAS COMUNES Y SOLUCIONES (TROUBLESHOOTING)
+
+### 1. Error: "Unexpected token < in JSON" / Cuadro Negro en Debug Mode
+**Causa:** El servidor de Loterías (SELAE) está bloqueando la IP de tu servidor mediante Akamai (Firewall). En lugar de devolver JSON, devuelve una página HTML de "Access Denied" (Error 403).
+**Diagnóstico:**
+- El Debug Mode muestra `Status: 200` o `403`.
+- El `Preview` muestra código HTML (`<!DOCTYPE html>...`).
+**Solución:**
+- **Contactar con SELAE:** Debes solicitar que añadan la IP de tu servidor (o el dominio) a la **Whitelist de Akamai**.
+- Sin este paso, el plugin no funcionará en el servidor (aunque funcione en local/localhost).
+
+### 2. Error: "API Error 404"
+**Causa:** WordPress no reconoce las rutas de la API interna (`/wp-json/loteria-navidad/v5/...`).
+**Solución:**
+- Ve a **Ajustes > Enlaces permanentes** en WordPress y pulsa "Guardar cambios" para regenerar el `.htaccess`.
+- La versión V5.3 intenta hacer esto automáticamente al iniciarse.
+
+### 3. El buscador recarga la página
+**Causa:** Conflicto de IDs en versiones antiguas (V1-V4) o JavaScript no cargado.
+**Solución:**
+- Asegúrate de usar la **Versión V5+** (Arquitectura Event Delegation).
+- Verifica que `wp_footer()` se está ejecutando en tu tema.
+
+---
+
+## 📞 Contacto Técnico
+Para solicitar el desbloqueo a SELAE, proporcionar:
+- IP del Servidor de Producción.
+- Dominio (`theobjective.com`).
+- User-Agent utilizado (ver código en `loteria-navidad-2025.php`).
+
 ## Notas para Desarrolladores
 - **No tocar:** La lógica de los shortcodes en JS espera la estructura exacta que devuelve SELAE.
 - **Caché:** Si necesitas ver datos en tiempo real real sin caché, borra los transients `loteria_nav_premios_{ID}` en la base de datos o espera 60s.
