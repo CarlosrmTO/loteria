@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Loteria Navidad 2025 - V5 (Event Delegation)
  * Description: Widgets de lotería robustos usando Event Delegation para evitar conflictos JS.
- * Version: 5.1 (Auto-Fix Permalinks)
+ * Version: 5.2 (Debug Mode)
  * Author: Cascade AI
  */
 
@@ -51,10 +51,26 @@ function loteria_navidad_proxy_handler_v5($request) {
     if (is_wp_error($response)) return new WP_Error('api_error', $response->get_error_message(), ['status' => 500]);
 
     $body = wp_remote_retrieve_body($response);
-    if (empty($body)) return new WP_Error('empty', 'Sin datos', ['status' => 502]);
+    $code = wp_remote_retrieve_response_code($response);
+
+    // DEBUG MODE: Si falla el JSON, devolver info de depuración
+    $json = json_decode($body);
+    if ($json === null) {
+        // Intentar detectar por qué falló
+        $json_error = json_last_error_msg();
+        return rest_ensure_response([
+            'error' => 'DEBUG_MODE',
+            'message' => 'SELAE devolvió datos no válidos',
+            'selae_code' => $code,
+            'body_length' => strlen($body),
+            'body_preview' => substr($body, 0, 500), // Ver qué llega realmente
+            'json_error' => $json_error,
+            'is_utf8' => mb_check_encoding($body, 'UTF-8') ? 'YES' : 'NO'
+        ]);
+    }
 
     set_transient($cache_key, $body, 60);
-    return rest_ensure_response(json_decode($body));
+    return rest_ensure_response($json);
 }
 
 function loteria_navidad_get_api_v5($type) {
@@ -208,6 +224,24 @@ add_action('wp_footer', function() {
                 if(!r.ok) throw new Error(`API Error ${r.status}`);
                 return r.json();
             }).then(d => {
+                // DEBUG HANDLER
+                if(d.error === 'DEBUG_MODE') {
+                    console.warn('DEBUG:', d);
+                    const debugInfo = `<div style="background:#333;color:#0f0;padding:15px;font-family:monospace;font-size:12px;text-align:left;overflow:auto;">
+                        <strong>DEBUG MODE:</strong><br>
+                        Status: ${d.selae_code}<br>
+                        Length: ${d.body_length}<br>
+                        JSON Error: ${d.json_error}<br>
+                        UTF-8: ${d.is_utf8}<br>
+                        <hr style="border-color:#555;">
+                        Preview:<br>${d.body_preview.replace(/</g,'&lt;')}
+                    </div>`;
+                    if(content) content.innerHTML = debugInfo;
+                    if(res) res.innerHTML = debugInfo;
+                    if(list) list.innerHTML = debugInfo;
+                    return;
+                }
+
                 if(!d.primerPremio) {
                     content.innerHTML = '<p style="text-align:center;color:#666;">⚠️ Información no disponible.</p>';
                     return;
@@ -249,6 +283,13 @@ add_action('wp_footer', function() {
                 if(!r.ok) throw new Error(`API Error ${r.status}`);
                 return r.json();
             }).then(d => {
+                // DEBUG HANDLER
+                if(d.error === 'DEBUG_MODE') {
+                    const debugInfo = `<div style="background:#333;color:#0f0;padding:15px;font-family:monospace;font-size:12px;text-align:left;">DEBUG: ${d.json_error} (${d.body_length} bytes)<br>Preview: ${d.body_preview.replace(/</g,'&lt;')}</div>`;
+                    res.innerHTML = debugInfo;
+                    return;
+                }
+
                     if(!d.compruebe) { res.innerHTML = '<p style="text-align:center;">Sistema no activo.</p>'; return; }
                     const win = d.compruebe.find(i => i.decimo == num);
                     if(win) {
@@ -279,6 +320,12 @@ add_action('wp_footer', function() {
                 if(!r.ok) throw new Error(`API Error ${r.status}`);
                 return r.json();
             }).then(d => {
+                // DEBUG HANDLER
+                if(d.error === 'DEBUG_MODE') {
+                    const debugInfo = `<div style="background:#333;color:#0f0;padding:15px;font-family:monospace;font-size:12px;text-align:left;">DEBUG: ${d.json_error} (${d.body_length} bytes)<br>Preview: ${d.body_preview.replace(/</g,'&lt;')}</div>`;
+                    res.innerHTML = debugInfo;
+                    return;
+                }
                     if(!Array.isArray(d)) { res.innerHTML = '<p style="text-align:center;">Buscador no disponible.</p>'; return; }
                     const entry = d.find(i => i.decimo == num);
                     if(entry && entry.repartidoEn) {
@@ -307,6 +354,12 @@ add_action('wp_footer', function() {
                 if(!r.ok) throw new Error(`API Error ${r.status}`);
                 return r.json();
             }).then(d => {
+                // DEBUG HANDLER
+                if(d.error === 'DEBUG_MODE') {
+                    const debugInfo = `<div style="background:#333;color:#0f0;padding:15px;font-family:monospace;font-size:12px;text-align:left;">DEBUG: ${d.json_error} (${d.body_length} bytes)<br>Preview: ${d.body_preview.replace(/</g,'&lt;')}</div>`;
+                    list.innerHTML = debugInfo;
+                    return;
+                }
                 if(!Array.isArray(d)) { list.innerHTML = '<p style="text-align:center;">Datos no disponibles.</p>'; return; }
                 
                 // Process Admins
