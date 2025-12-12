@@ -262,13 +262,13 @@ add_action('wp_footer', function() {
                     return;
                 }
 
-                    if(!d.compruebe) { res.innerHTML = '<p style="text-align:center;">Sistema no activo.</p>'; return; }
+                    if(!d.compruebe) { res.innerHTML = '<p style="text-align:center;">Su nº no ha sido premiado.</p>'; return; }
                     const win = d.compruebe.find(i => i.decimo == num);
                     if(win) {
                         const winAmt = (win.prize/100/20) * amt;
                         res.innerHTML = `<div style="text-align:center;padding:20px;background:#fdfbf7;border:1px solid #e8dfc8;border-radius:8px;"><h3>¡Enhorabuena!</h3><p>Premio: <strong>${fmt(winAmt)}</strong></p></div>`;
                     } else {
-                        res.innerHTML = `<div style="text-align:center;padding:20px;background:#f8f9fa;border:1px solid #ddd;border-radius:8px;"><h3>Sin premio</h3></div>`;
+                        res.innerHTML = `<div style="text-align:center;padding:20px;background:#f8f9fa;border:1px solid #ddd;border-radius:8px;"><h3>Su nº no ha sido premiado</h3></div>`;
                     }
                 }).catch(e => {
                     console.error(e);
@@ -298,7 +298,15 @@ add_action('wp_footer', function() {
                 // Process Admins
                 const map = new Map();
                 d.forEach(i => {
-                    if(i.repartidoEn) i.repartidoEn.forEach(a => map.set(a.poblacion+a.direccion, a));
+                    if(i.repartidoEn) i.repartidoEn.forEach(a => {
+                        const key = (a.idReceptor || a.receptor || a.furl || (
+                            (a.nombre_comercial || a.nombreComercial || '') + '|' +
+                            (a.direccion || '') + '|' +
+                            (a.poblacion || '') + '|' +
+                            (a.provincia || '')
+                        ));
+                        map.set(key, a);
+                    });
                 });
                 const admins = Array.from(map.values());
                 
@@ -317,10 +325,25 @@ add_action('wp_footer', function() {
                     const doSearch = () => {
                         const q = input.value.toLowerCase();
                         const p = sel.value;
-                        const f = admins.filter(a => (p ? a.provincia===p : true) && (a.nombre_comercial.toLowerCase().includes(q) || a.poblacion.toLowerCase().includes(q)));
+                        const f = admins.filter(a => {
+                            const provincia = (a.provincia || '').toLowerCase();
+                            const poblacion = (a.poblacion || '').toLowerCase();
+                            const nombre = ((a.nombre_comercial || a.nombreComercial || '') + '').toLowerCase();
+                            const direccion = (a.direccion || '').toLowerCase();
+                            const okProv = p ? a.provincia === p : true;
+                            const okQuery = !q || nombre.includes(q) || poblacion.includes(q) || provincia.includes(q) || direccion.includes(q);
+                            return okProv && okQuery;
+                        });
                         if(!f.length) { list.innerHTML = '<p style="text-align:center;">Sin resultados.</p>'; return; }
                         let h = `<div style="padding:10px;background:#f0f7ff;">Encontradas: ${f.length}</div>`;
-                        f.slice(0,50).forEach(a => h += `<div style="padding:10px;border-bottom:1px solid #eee;"><strong>${a.nombre_comercial}</strong><br><small>${a.direccion}, ${a.poblacion} (${a.provincia})</small></div>`);
+                        f.slice(0,50).forEach(a => {
+                            const nombre = (a.nombre_comercial || a.nombreComercial || 'Administración');
+                            const ciudad = (a.poblacion || '');
+                            const provincia = (a.provincia || '');
+                            const direccion = (a.direccion || '');
+                            const loc = (ciudad && provincia) ? `${ciudad} (${provincia})` : (ciudad || provincia);
+                            h += `<div style="padding:10px;border-bottom:1px solid #eee;"><strong>${nombre}</strong><br><small>${direccion}${direccion && loc ? ', ' : ''}${loc}</small></div>`;
+                        });
                         list.innerHTML = h;
                     };
                     btn.onclick = doSearch;
