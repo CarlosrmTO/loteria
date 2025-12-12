@@ -338,10 +338,10 @@ add_action('wp_footer', function() {
                         let h = `<div style="padding:10px;background:#f0f7ff;">Encontradas: ${f.length}</div>`;
                         f.slice(0,50).forEach(a => {
                             const nombre = (a.nombre_comercial || a.nombreComercial || 'Administración');
-                            const ciudad = (a.poblacion || '');
+                            const poblacion = (a.poblacion || '');
                             const provincia = (a.provincia || '');
                             const direccion = (a.direccion || '');
-                            const loc = (ciudad && provincia) ? `${ciudad} (${provincia})` : (ciudad || provincia);
+                            const loc = (poblacion && provincia) ? `${poblacion} (${provincia})` : (poblacion || provincia);
                             h += `<div style="padding:10px;border-bottom:1px solid #eee;"><strong>${nombre}</strong><br><small>${direccion}${direccion && loc ? ', ' : ''}${loc}</small></div>`;
                         });
                         list.innerHTML = h;
