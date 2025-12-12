@@ -60,20 +60,13 @@ function loteria_navidad_proxy_handler_v5($request) {
     $body = wp_remote_retrieve_body($response);
     $code = wp_remote_retrieve_response_code($response);
 
-    // DEBUG MODE: Si falla el JSON, devolver info de depuración
+    // DEBUG SILENCIOSO: Si falla el JSON (ej. sorteo no iniciado), devolver vacío para pintar tabla "Pendiente"
     $json = json_decode($body);
     if ($json === null) {
-        // Intentar detectar por qué falló
-        $json_error = json_last_error_msg();
-        return rest_ensure_response([
-            'error' => 'DEBUG_MODE',
-            'message' => 'SELAE devolvió datos no válidos',
-            'selae_code' => $code,
-            'body_length' => strlen($body),
-            'body_preview' => substr($body, 0, 500), // Ver qué llega realmente
-            'json_error' => $json_error,
-            'is_utf8' => mb_check_encoding($body, 'UTF-8') ? 'YES' : 'NO'
-        ]);
+        // Log interno por si acaso
+        error_log("Loteria V5: Respuesta no JSON de SELAE (Code $code). Body length: " . strlen($body));
+        // Devolver objeto vacío para que el frontend pinte los guiones
+        return rest_ensure_response(new stdClass());
     }
 
     set_transient($cache_key, $body, 60);
@@ -97,7 +90,7 @@ add_shortcode('loteria_premios', function() {
         <div style="text-align:center;margin-bottom:30px;">
             <h2 style="font-size:2rem;color:#1a1a1a;">Premios Principales</h2>
             <p style="color:#666;">Resultados del Sorteo de Navidad 2025</p>
-            <button class="loteria-btn-reload" style="background:#fff;border:1px solid #FFE032;color:#FFE032;padding:8px 16px;border-radius:8px;cursor:pointer;margin-top:10px;">🔄 Actualizar</button>
+            <button class="loteria-btn-reload" style="background:#FFE032;border:none;color:black;padding:8px 16px;border-radius:8px;cursor:pointer;margin-top:10px;font-weight:600;">🔄 Actualizar</button>
         </div>
         <div class="loteria-content" style="background:#fff;border-radius:8px;box-shadow:0 4px 6px rgba(0,0,0,0.1);padding:30px;border-top:4px solid #FFE032;">
             <div class="loteria-loading">Cargando premios...</div>
@@ -117,7 +110,7 @@ add_shortcode('loteria_comprobador', function() {
         <div style="text-align:center;margin-bottom:30px;">
             <h2 style="font-size:2rem;color:#1a1a1a;">Comprobar Lotería</h2>
             <p style="color:#666;">Introduce tu número y el importe jugado</p>
-            <button class="loteria-btn-reload" style="background:#fff;border:1px solid #FFE032;color:#FFE032;padding:8px 16px;border-radius:8px;cursor:pointer;margin-top:10px;">🔄 Actualizar</button>
+            <button class="loteria-btn-reload" style="background:#FFE032;border:none;color:black;padding:8px 16px;border-radius:8px;cursor:pointer;margin-top:10px;font-weight:600;">🔄 Actualizar</button>
         </div>
         <div style="background:#fff;border-radius:8px;box-shadow:0 4px 6px rgba(0,0,0,0.1);padding:30px;border-top:4px solid #FFE032;">
             <form class="loteria-form-check" style="display:flex;gap:15px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;">
@@ -148,7 +141,7 @@ add_shortcode('loteria_buscar', function() {
         <div style="text-align:center;margin-bottom:30px;">
             <h2 style="font-size:2rem;color:#1a1a1a;">Buscar Número</h2>
             <p style="color:#666;">Descubre dónde se vende tu número favorito</p>
-            <button class="loteria-btn-reload" style="background:#fff;border:1px solid #FFE032;color:#FFE032;padding:8px 16px;border-radius:8px;cursor:pointer;margin-top:10px;">🔄 Actualizar</button>
+            <button class="loteria-btn-reload" style="background:#FFE032;border:none;color:black;padding:8px 16px;border-radius:8px;cursor:pointer;margin-top:10px;font-weight:600;">🔄 Actualizar</button>
         </div>
         <div style="background:#fff;border-radius:8px;box-shadow:0 4px 6px rgba(0,0,0,0.1);padding:30px;border-top:4px solid #FFE032;">
             <form class="loteria-form-search" style="display:flex;gap:15px;justify-content:center;margin-bottom:20px;">
