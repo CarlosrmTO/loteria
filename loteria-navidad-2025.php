@@ -136,34 +136,7 @@ add_shortcode('loteria_comprobador', function() {
 
 // Shortcode 3: [ELIMINADO] Buscar Número
 // Shortcode 4: [ELIMINADO] Administraciones Premiadas
-
-// Shortcode 5: Buscador Administraciones
-add_shortcode('loteria_buscador_admin', function() {
-    $uid = 'lot_' . md5(uniqid(rand(), true));
-    $api = loteria_navidad_get_api_v5('repartido');
-
-    ob_start();
-    ?>
-    <div class="loteria-widget loteria-buscador-admin" data-api="<?php echo esc_attr($api); ?>" id="<?php echo $uid; ?>" style="margin:40px 0;font-family:Arial,sans-serif;clear:both;min-height:100px;">
-        <div style="text-align:center;margin-bottom:30px;">
-            <h2 style="font-size:2rem;color:#1a1a1a;">Buscador de Administraciones</h2>
-            <p style="color:#666;">Encuentra dónde comprar lotería en toda España</p>
-        </div>
-        <div style="background:#fff;border-radius:8px;box-shadow:0 4px 6px rgba(0,0,0,0.1);padding:30px;border-top:4px solid #FFE032;">
-            <div style="display:flex;gap:10px;margin-bottom:15px;">
-                <input type="text" class="loteria-input-search" placeholder="Buscar por nombre, localidad..." style="flex:1;padding:12px;border:1px solid #ddd;border-radius:8px;">
-                <button class="loteria-btn-search" style="background:#FFE032;color:black;border:none;padding:12px 24px;border-radius:8px;font-weight:600;cursor:pointer;">Buscar</button>
-            </div>
-            <select class="loteria-prov-select" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;margin-bottom:20px;">
-                <option value="">Todas las provincias</option>
-            </select>
-            <div class="loteria-list" style="max-height:500px;overflow-y:auto;">
-                <p style="text-align:center;color:#666;padding:40px;">Cargando datos...</p>
-            </div>
-        </div>
-    </div>
-    <?php return ob_get_clean();
-});
+// Shortcode 5: [ELIMINADO] Buscador Administraciones
 
 // 3. SINGLE UNIFIED JAVASCRIPT (WP_FOOTER)
 add_action('wp_footer', function() {
@@ -276,88 +249,6 @@ add_action('wp_footer', function() {
                 });
             });
         });
-
-        // 5. ADMINS (Shared Data Logic)
-        const loadAdmins = (w, type) => {
-            const api = w.dataset.api;
-            const sel = w.querySelector('select');
-            const list = w.querySelector('.loteria-list');
-            
-            fetch(api).then(r=>{
-                if(!r.ok) throw new Error(`API Error ${r.status}`);
-                return r.json();
-            }).then(d => {
-                // DEBUG HANDLER
-                if(d.error === 'DEBUG_MODE') {
-                    const debugInfo = `<div style="background:#333;color:#0f0;padding:15px;font-family:monospace;font-size:12px;text-align:left;">DEBUG: ${d.json_error} (${d.body_length} bytes)<br>Preview: ${d.body_preview.replace(/</g,'&lt;')}</div>`;
-                    list.innerHTML = debugInfo;
-                    return;
-                }
-                if(!Array.isArray(d)) { list.innerHTML = '<p style="text-align:center;">Datos no disponibles.</p>'; return; }
-                
-                // Process Admins
-                const map = new Map();
-                d.forEach(i => {
-                    if(i.repartidoEn) i.repartidoEn.forEach(a => {
-                        const key = (a.idReceptor || a.receptor || a.furl || (
-                            (a.nombre_comercial || a.nombreComercial || '') + '|' +
-                            (a.direccion || '') + '|' +
-                            (a.poblacion || '') + '|' +
-                            (a.provincia || '')
-                        ));
-                        map.set(key, a);
-                    });
-                });
-                const admins = Array.from(map.values());
-                
-                // Fill Select
-                const provs = new Set(admins.map(a => a.provincia).filter(Boolean));
-                Array.from(provs).sort().forEach(p => {
-                    const opt = document.createElement('option');
-                    opt.value = p; opt.textContent = p;
-                    sel.appendChild(opt);
-                });
-
-                // Logic for "Buscador" (Filter input)
-                if(type === 'buscador') {
-                    const input = w.querySelector('input');
-                    const btn = w.querySelector('.loteria-btn-search');
-                    const doSearch = () => {
-                        const q = input.value.toLowerCase();
-                        const p = sel.value;
-                        const f = admins.filter(a => {
-                            const provincia = (a.provincia || '').toLowerCase();
-                            const poblacion = (a.poblacion || '').toLowerCase();
-                            const nombre = ((a.nombre_comercial || a.nombreComercial || '') + '').toLowerCase();
-                            const direccion = (a.direccion || '').toLowerCase();
-                            const okProv = p ? a.provincia === p : true;
-                            const okQuery = !q || nombre.includes(q) || poblacion.includes(q) || provincia.includes(q) || direccion.includes(q);
-                            return okProv && okQuery;
-                        });
-                        if(!f.length) { list.innerHTML = '<p style="text-align:center;">Sin resultados.</p>'; return; }
-                        let h = `<div style="padding:10px;background:#f0f7ff;">Encontradas: ${f.length}</div>`;
-                        f.slice(0,50).forEach(a => {
-                            const nombre = (a.nombre_comercial || a.nombreComercial || 'Administración');
-                            const poblacion = (a.poblacion || '');
-                            const provincia = (a.provincia || '');
-                            const direccion = (a.direccion || '');
-                            const loc = (poblacion && provincia) ? `${poblacion} (${provincia})` : (poblacion || provincia);
-                            h += `<div style="padding:10px;border-bottom:1px solid #eee;"><strong>${nombre}</strong><br><small>${direccion}${direccion && loc ? ', ' : ''}${loc}</small></div>`;
-                        });
-                        list.innerHTML = h;
-                    };
-                    btn.onclick = doSearch;
-                    input.onkeyup = (e) => { if(e.key==='Enter') doSearch(); };
-                    list.innerHTML = '<p style="text-align:center;padding:40px;">Usa el buscador.</p>';
-                }
-
-            }).catch(e => {
-                console.error(e);
-                list.innerHTML = `<p style="color:red;">Error: ${e.message}</p>`;
-            });
-        };
-
-        document.querySelectorAll('.loteria-buscador-admin').forEach(w => loadAdmins(w, 'buscador'));
 
     });
     </script>
