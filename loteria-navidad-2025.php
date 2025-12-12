@@ -32,15 +32,19 @@ add_action('rest_api_init', function () {
 function loteria_navidad_proxy_handler_v5($request) {
     $type = $request['type'];
     $id = LOTERIA_ID_SORTEO_V5;
+    $num = $request->get_param('num'); // Capturar número si viene
     
+    // Construir URLs base
     $endpoints = [
         'premios' => 'https://www.loteriasyapuestas.es/servicios/premioDecimoProvisionalWeb?s=' . $id,
-        'repartido' => 'https://www.loteriasyapuestas.es/servicios/repartidoEn1?s=' . $id
+        'repartido' => 'https://www.loteriasyapuestas.es/servicios/repartidoEn1?s=' . $id,
+        'busqueda' => 'https://www.loteriasyapuestas.es/servicios/busquedaNumeros?sorteo=' . $id . '&numero=' . $num
     ];
 
     if (!isset($endpoints[$type])) return new WP_Error('invalid', 'Tipo inválido', ['status' => 404]);
-
-    $cache_key = 'loteria_v5_' . $type . '_' . $id;
+    
+    // Cache key incluye el número si es búsqueda
+    $cache_key = 'loteria_v5_' . $type . '_' . $id . ($num ? '_' . $num : '');
     $cached = get_transient($cache_key);
     if ($cached) return rest_ensure_response(json_decode($cached));
 
@@ -133,7 +137,8 @@ add_shortcode('loteria_comprobador', function() {
 // Shortcode 3: Buscar Número
 add_shortcode('loteria_buscar', function() {
     $uid = 'lot_' . md5(uniqid(rand(), true));
-    $api = loteria_navidad_get_api_v5('repartido');
+    // USAMOS ENDPOINT DE STOCK (BUSQUEDA) HASTA EL DIA DEL SORTEO
+    $api = loteria_navidad_get_api_v5('busqueda');
 
     ob_start();
     ?>
@@ -327,29 +332,68 @@ add_action('wp_footer', function() {
             w.querySelector('form').addEventListener('submit', function(e) {
                 e.preventDefault();
                 const num = this.querySelector('[name=num]').value.padStart(5,'0');
-                res.innerHTML = '<p style="text-align:center;">Buscando...</p>';
+                res.innerHTML = '<p style="text-align:center;">Buscando disponibilidad...</p>';
 
-                fetch(api).then(r=>{
-                if(!r.ok) throw new Error(`API Error ${r.status}`);
-                return r.json();
-            }).then(d => {
-                // DEBUG HANDLER
-                if(d.error === 'DEBUG_MODE') {
-                    const debugInfo = `<div style="background:#333;color:#0f0;padding:15px;font-family:monospace;font-size:12px;text-align:left;">DEBUG: ${d.json_error} (${d.body_length} bytes)<br>Preview: ${d.body_preview.replace(/</g,'&lt;')}</div>`;
-                    res.innerHTML = debugInfo;
-                    return;
+                // Añadir num a la query si usamos el endpoint de busqueda
+                let fetchUrl = api;
+                if(api.includes('busqueda')) {
+                    fetchUrl += (fetchUrl.includes('?') ? '&' : '?') + 'num=' + num;
                 }
-                    if(!Array.isArray(d)) { res.innerHTML = '<p style="text-align:center;">Buscador no disponible.</p>'; return; }
-                    const entry = d.find(i => i.decimo == num);
-                    if(entry && entry.repartidoEn) {
-                        let h = '';
-                        entry.repartidoEn.forEach(a => {
-                            h += `<div style="padding:15px;border-bottom:1px solid #e0e0e0;"><strong>${a.nombre_comercial}</strong><br><small>${a.direccion}, ${a.poblacion}</small></div>`;
+
+                fetch(fetchUrl).then(r=>{
+                    if(!r.ok) throw new Error(`API Error ${r.status}`);
+                    return r.json();
+                }).then(d => {
+                    // Si falla silenciosamente (vacío)
+                    if(Object.keys(d).length === 0) {
+                        res.innerHTML = '<p style="text-align:center;">Sin resultados o conexión.</p>';
+                        return;
+                    }
+
+                    let h = '';
+                    let found = false;
+
+                    // CASO 1: Respuesta STOCK (Objeto con claves "0", "1"...)
+                    // La API de busqueda devuelve un objeto donde las claves son índices
+                    if (d.total !== undefined || d['0']) {
+                        const total = d.total || Object.keys(d).filter(k=>!isNaN(k)).length;
+                        if(total == 0 || d.error == 1) {
+                             res.innerHTML = '<p style="text-align:center;">No disponible en terminales.</p>';
+                             return;
+                        }
+                        
+                        h += `<div style="padding:10px;background:#f0f7ff;margin-bottom:10px;text-align:center;">Disponible en <strong>${total}</strong> puntos de venta</div>`;
+                        
+                        // Iterar claves numéricas
+                        Object.keys(d).forEach(k => {
+                            if(!isNaN(k) && typeof d[k] === 'object') {
+                                const pv = d[k];
+                                h += `<div style="padding:15px;border-bottom:1px solid #e0e0e0;">
+                                    <strong>${pv.nombreComercial || 'Administración'}</strong><br>
+                                    <small>${pv.direccionCompleta || (pv.direccion + ', ' + pv.poblacion)}</small><br>
+                                    ${pv.telefono ? `<span style="font-size:0.9em;color:#666;">📞 ${pv.telefono}</span>` : ''}
+                                </div>`;
+                                found = true;
+                            }
                         });
+                    }
+                    // CASO 2: Respuesta PREMIOS (Array de objetos) - Para el día 22
+                    else if(Array.isArray(d)) {
+                         const entry = d.find(i => i.decimo == num);
+                         if(entry && entry.repartidoEn) {
+                            entry.repartidoEn.forEach(a => {
+                                h += `<div style="padding:15px;border-bottom:1px solid #e0e0e0;"><strong>${a.nombre_comercial}</strong><br><small>${a.direccion}, ${a.poblacion}</small></div>`;
+                            });
+                            found = true;
+                         }
+                    }
+
+                    if(found) {
                         res.innerHTML = h;
                     } else {
                         res.innerHTML = `<p style="text-align:center;">No encontrado.</p>`;
                     }
+
                 }).catch(e => {
                     console.error(e);
                     res.innerHTML = `<p style="color:red;">Error: ${e.message}</p>`;
