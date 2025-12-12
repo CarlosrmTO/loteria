@@ -237,37 +237,50 @@ add_action('wp_footer', function() {
                     const debugInfo = `<div style="background:#333;color:#0f0;padding:15px;font-family:monospace;font-size:12px;text-align:left;overflow:auto;">
                         <strong>DEBUG MODE:</strong><br>
                         Status: ${d.selae_code}<br>
-                        Length: ${d.body_length}<br>
-                        JSON Error: ${d.json_error}<br>
-                        UTF-8: ${d.is_utf8}<br>
-                        <hr style="border-color:#555;">
                         Preview:<br>${d.body_preview.replace(/</g,'&lt;')}
                     </div>`;
                     if(content) content.innerHTML = debugInfo;
-                    if(res) res.innerHTML = debugInfo;
-                    if(list) list.innerHTML = debugInfo;
                     return;
                 }
 
-                if(!d.primerPremio) {
-                    content.innerHTML = '<p style="text-align:center;color:#666;">⚠️ Información no disponible.</p>';
-                    return;
-                }
-                const p = [
-                    {n:'EL GORDO', v:'4.000.000 €', d:d.primerPremio.decimo},
-                    {n:'2º PREMIO', v:'1.250.000 €', d:d.segundoPremio.decimo},
-                    {n:'3º PREMIO', v:'500.000 €', d:d.tercerosPremios[0].decimo},
-                    {n:'4º PREMIO', v:'200.000 €', d:d.cuartosPremios[0].decimo},
-                    {n:'5º PREMIO', v:'60.000 €', d:d.quintosPremios[0].decimo}
+                // Definir estructura base de premios
+                const basePremios = [
+                    {n:'EL GORDO', v:'4.000.000 €', k:'primerPremio'},
+                    {n:'2º PREMIO', v:'1.250.000 €', k:'segundoPremio'},
+                    {n:'3º PREMIO', v:'500.000 €', k:'tercerosPremios', idx:0},
+                    {n:'4º PREMIO', v:'200.000 €', k:'cuartosPremios', idx:0},
+                    {n:'5º PREMIO', v:'60.000 €', k:'quintosPremios', idx:0}
                 ];
+
                 let h = '';
-                p.forEach(i => {
-                    h += `<div style="padding:15px;margin:10px 0;border:1px solid #e0e0e0;border-left:4px solid #FFE032;border-radius:8px;display:grid;grid-template-columns:120px 1fr;gap:15px;align-items:center;">
-                        <div><strong>${i.n}</strong><br><small style="color:#666;">${i.v}</small></div>
-                        <div style="text-align:center;font-size:1.5rem;font-weight:700;font-family:monospace;">${i.d||'-----'}</div>
+                basePremios.forEach(i => {
+                    // Obtener dato real o usar default
+                    let num = '-----';
+                    let status = 'Pendiente de extraer';
+                    
+                    if (d[i.k]) {
+                        const obj = (i.idx !== undefined && Array.isArray(d[i.k])) ? d[i.k][i.idx] : d[i.k];
+                        if (obj && obj.decimo) {
+                            num = obj.decimo;
+                            status = ''; // Si hay número, borramos "Pendiente" o ponemos hora si viniera
+                        }
+                    }
+
+                    h += `<div style="padding:15px;margin:10px 0;background:#fffaf0;border:1px solid #e0e0e0;border-left:5px solid #FFE032;border-radius:8px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+                        <div style="flex:1;min-width:140px;">
+                            <strong style="font-size:1.1em;display:block;margin-bottom:4px;">${i.n}</strong>
+                            <small style="color:#666;font-size:0.9em;">${i.v}</small>
+                        </div>
+                        <div style="flex:1;text-align:center;font-size:1.8rem;font-weight:700;font-family:monospace;color:#333;min-width:120px;">
+                            ${num}
+                        </div>
+                        <div style="flex:1;text-align:right;color:#999;font-size:0.85em;min-width:100px;">
+                            ${status}
+                        </div>
                     </div>`;
                 });
                 content.innerHTML = h;
+
             }).catch(e => {
                 console.error(e);
                 content.innerHTML = `<p style="color:red;">Error: ${e.message}</p>`;
