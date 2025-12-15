@@ -1,0 +1,46 @@
+<!-- 
+    WIDGETS PARA PORTADA (Requiere el plugin activo para estilos y funcionalidad)
+    
+    Instrucciones:
+    1. Asegúrate de que el plugin 'Loteria Navidad 2025' está activo.
+    2. Copia y pega el bloque HTML que necesites en tu maquetador (Gutenberg, Elementor, etc.).
+    3. Los estilos se cargarán automáticamente desde el archivo CSS del plugin.
+    4. La funcionalidad (JS) también la gestiona el plugin automáticamente.
+-->
+
+<!-- OPCIÓN A: WIDGET HORIZONTAL (Premios) -->
+<div class="loteria-widget loteria-premios-horiz" data-api="/wp-json/loteria-navidad/v5/datos/premios">
+    <div class="loteria-box-horiz">
+        <div class="loteria-scroll-container">
+            <div class="loteria-content-horiz loteria-flex-row">
+                <div class="loteria-loading" style="width:100%;">Cargando premios...</div>
+            </div>
+        </div>
+        <div style="text-align:center;">
+             <button class="loteria-btn-reload">Actualizar</button>
+        </div>
+    </div>
+</div>
+
+<!-- OPCIÓN B: COMPROBADOR DE DÉCIMOS -->
+<div class="loteria-widget loteria-comprobador" data-api="/wp-json/loteria-navidad/v5/datos/premios">
+    <div class="loteria-header">
+        <h2 class="loteria-title">Comprobar Lotería</h2>
+        <p class="loteria-subtitle">Introduce tu número y el importe jugado</p>
+        <button class="loteria-btn-reload">Actualizar</button>
+    </div>
+    <div class="loteria-content">
+        <form class="loteria-form-check">
+            <div class="loteria-input-group"><label>Número</label>
+                <input type="text" name="num" maxlength="5" placeholder="00000" class="loteria-input" required>
+            </div>
+            <div class="loteria-input-group"><label>Importe (€)</label>
+                <input type="number" name="amt" value="20" min="1" class="loteria-input" required>
+            </div>
+            <div style="display:flex;align-items:flex-end;">
+                <button type="submit" class="loteria-btn-check">Comprobar</button>
+            </div>
+        </form>
+        <div class="loteria-result"></div>
+    </div>
+</div>

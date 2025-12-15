@@ -21,6 +21,11 @@ if (!defined('LOTERIA_ID_SORTEO_V5')) {
     define('LOTERIA_ID_SORTEO_V5', '1295909102');
 }
 
+// Enqueue Styles
+add_action('wp_enqueue_scripts', function() {
+    wp_enqueue_style('loteria-navidad-styles', plugins_url('loteria.css', __FILE__), [], '5.3');
+});
+
 add_action('rest_api_init', function () {
     register_rest_route('loteria-navidad/v5', '/datos/(?P<type>[a-zA-Z0-9-]+)', array(
         'methods' => 'GET',
@@ -90,13 +95,13 @@ add_shortcode('loteria_premios', function() {
     
     ob_start();
     ?>
-    <div class="loteria-widget loteria-premios" data-api="<?php echo esc_attr($api); ?>" id="<?php echo $uid; ?>" style="margin:40px 0;font-family:Arial,sans-serif;clear:both;min-height:100px;">
-        <div style="text-align:center;margin-bottom:30px;">
-            <h2 style="font-size:2rem;color:#1a1a1a;">Premios Principales</h2>
-            <p style="color:#666;">Resultados del Sorteo de Navidad 2025</p>
-            <button class="loteria-btn-reload" style="background:#FFE032;border:none;color:black;padding:8px 16px;border-radius:8px;cursor:pointer;margin-top:10px;font-weight:600;">Actualizar</button>
+    <div class="loteria-widget loteria-premios" data-api="<?php echo esc_attr($api); ?>" id="<?php echo $uid; ?>">
+        <div class="loteria-header">
+            <h2 class="loteria-title">Premios Principales</h2>
+            <p class="loteria-subtitle">Resultados del Sorteo de Navidad 2025</p>
+            <button class="loteria-btn-reload">Actualizar</button>
         </div>
-        <div class="loteria-content" style="background:#fff;border-radius:8px;box-shadow:0 4px 6px rgba(0,0,0,0.1);padding:30px;border-top:4px solid #FFE032;">
+        <div class="loteria-content">
             <div class="loteria-loading">Cargando premios...</div>
         </div>
     </div>
@@ -110,22 +115,22 @@ add_shortcode('loteria_comprobador', function() {
 
     ob_start();
     ?>
-    <div class="loteria-widget loteria-comprobador" data-api="<?php echo esc_attr($api); ?>" id="<?php echo $uid; ?>" style="margin:40px 0;font-family:Arial,sans-serif;clear:both;min-height:100px;">
-        <div style="text-align:center;margin-bottom:30px;">
-            <h2 style="font-size:2rem;color:#1a1a1a;">Comprobar Lotería</h2>
-            <p style="color:#666;">Introduce tu número y el importe jugado</p>
-            <button class="loteria-btn-reload" style="background:#FFE032;border:none;color:black;padding:8px 16px;border-radius:8px;cursor:pointer;margin-top:10px;font-weight:600;">Actualizar</button>
+    <div class="loteria-widget loteria-comprobador" data-api="<?php echo esc_attr($api); ?>" id="<?php echo $uid; ?>">
+        <div class="loteria-header">
+            <h2 class="loteria-title">Comprobar Lotería</h2>
+            <p class="loteria-subtitle">Introduce tu número y el importe jugado</p>
+            <button class="loteria-btn-reload">Actualizar</button>
         </div>
-        <div style="background:#fff;border-radius:8px;box-shadow:0 4px 6px rgba(0,0,0,0.1);padding:30px;border-top:4px solid #FFE032;">
-            <form class="loteria-form-check" style="display:flex;gap:15px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;">
-                <div><label style="display:block;margin-bottom:5px;font-weight:600;">Número</label>
-                    <input type="text" name="num" maxlength="5" placeholder="00000" style="padding:12px;border:1px solid #ddd;border-radius:8px;" required>
+        <div class="loteria-content">
+            <form class="loteria-form-check">
+                <div class="loteria-input-group"><label>Número</label>
+                    <input type="text" name="num" maxlength="5" placeholder="00000" class="loteria-input" required>
                 </div>
-                <div><label style="display:block;margin-bottom:5px;font-weight:600;">Importe (€)</label>
-                    <input type="number" name="amt" value="20" min="1" style="padding:12px;border:1px solid #ddd;border-radius:8px;" required>
+                <div class="loteria-input-group"><label>Importe (€)</label>
+                    <input type="number" name="amt" value="20" min="1" class="loteria-input" required>
                 </div>
                 <div style="display:flex;align-items:flex-end;">
-                    <button type="submit" style="background:#FFE032;color:black;border:none;padding:12px 24px;border-radius:8px;font-weight:600;cursor:pointer;">Comprobar</button>
+                    <button type="submit" class="loteria-btn-check">Comprobar</button>
                 </div>
             </form>
             <div class="loteria-result"></div>
@@ -141,15 +146,15 @@ add_shortcode('loteria_pedrea', function() {
 
     ob_start();
     ?>
-    <div class="loteria-widget loteria-pedrea" data-api="<?php echo esc_attr($api); ?>" id="<?php echo $uid; ?>" style="margin:40px 0;font-family:Arial,sans-serif;clear:both;min-height:100px;">
-        <div style="text-align:center;margin-bottom:20px;">
-            <h2 style="font-size:2rem;color:#1a1a1a;">La Pedrea</h2>
-            <p style="color:#666;">Números premiados con 1.000€ a la serie</p>
-            <button class="loteria-btn-reload" style="background:#FFE032;border:none;color:black;padding:8px 16px;border-radius:8px;cursor:pointer;margin-top:10px;font-weight:600;">Actualizar</button>
+    <div class="loteria-widget loteria-pedrea" data-api="<?php echo esc_attr($api); ?>" id="<?php echo $uid; ?>">
+        <div class="loteria-header">
+            <h2 class="loteria-title">La Pedrea</h2>
+            <p class="loteria-subtitle">Números premiados con 1.000€ a la serie</p>
+            <button class="loteria-btn-reload">Actualizar</button>
         </div>
-        <div style="background:#fff;border-radius:8px;box-shadow:0 4px 6px rgba(0,0,0,0.1);padding:20px;border-top:4px solid #FFE032;">
-            <div class="loteria-pedrea-list" style="max-height:400px;overflow-y:auto;display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding-right:5px;">
-                <p style="text-align:center;color:#666;width:100%;">Cargando pedrea...</p>
+        <div class="loteria-content">
+            <div class="loteria-pedrea-list">
+                <p class="loteria-loading">Cargando pedrea...</p>
             </div>
         </div>
     </div>
@@ -163,15 +168,15 @@ add_shortcode('loteria_premios_horizontal', function() {
     
     ob_start();
     ?>
-    <div class="loteria-widget loteria-premios-horiz" data-api="<?php echo esc_attr($api); ?>" id="<?php echo $uid; ?>" style="margin:20px 0;font-family:Arial,sans-serif;clear:both;">
-        <div style="background:#fff;border-radius:8px;box-shadow:0 2px 4px rgba(0,0,0,0.1);padding:15px;border-top:3px solid #FFE032;">
-            <div style="overflow-x:auto;padding-bottom:10px;margin-bottom:10px;">
-                <div class="loteria-content-horiz" style="display:flex;gap:15px;min-width:max-content;padding:0 5px;">
-                    <div class="loteria-loading" style="text-align:center;width:100%;color:#666;">Cargando premios...</div>
+    <div class="loteria-widget loteria-premios-horiz" data-api="<?php echo esc_attr($api); ?>" id="<?php echo $uid; ?>">
+        <div class="loteria-box-horiz">
+            <div class="loteria-scroll-container">
+                <div class="loteria-content-horiz loteria-flex-row">
+                    <div class="loteria-loading" style="width:100%;">Cargando premios...</div>
                 </div>
             </div>
             <div style="text-align:center;">
-                 <button class="loteria-btn-reload" style="background:#FFE032;border:none;color:black;padding:8px 16px;border-radius:8px;cursor:pointer;font-weight:600;">Actualizar</button>
+                 <button class="loteria-btn-reload">Actualizar</button>
             </div>
         </div>
     </div>
@@ -233,15 +238,15 @@ add_action('wp_footer', function() {
                         }
                     }
 
-                    h += `<div style="padding:15px;margin:10px 0;background:#fffaf0;border:1px solid #e0e0e0;border-left:5px solid #FFE032;border-radius:8px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
-                        <div style="flex:1;min-width:140px;">
-                            <strong style="font-size:1.1em;display:block;margin-bottom:4px;">${i.n}</strong>
-                            <small style="color:#666;font-size:0.9em;">${i.v}</small>
+                    h += `<div class="loteria-premio-row">
+                        <div class="loteria-premio-info">
+                            <strong class="loteria-premio-name">${i.n}</strong>
+                            <small class="loteria-premio-val">${i.v}</small>
                         </div>
-                        <div style="flex:1;text-align:center;font-size:1.8rem;font-weight:700;font-family:monospace;color:#333;min-width:120px;">
+                        <div class="loteria-premio-num">
                             ${num}
                         </div>
-                        <div style="flex:1;text-align:right;color:#999;font-size:0.85em;min-width:100px;">
+                        <div class="loteria-premio-status">
                             ${status}
                         </div>
                     </div>`;
@@ -281,9 +286,9 @@ add_action('wp_footer', function() {
                     const win = d.compruebe.find(i => i.decimo == num);
                     if(win) {
                         const winAmt = (win.prize/100/20) * amt;
-                        res.innerHTML = `<div style="text-align:center;padding:20px;background:#fdfbf7;border:1px solid #e8dfc8;border-radius:8px;"><h3>¡Enhorabuena!</h3><p>Premio: <strong>${fmt(winAmt)}</strong></p></div>`;
+                        res.innerHTML = `<div class="loteria-result-box loteria-result-win"><h3>¡Enhorabuena!</h3><p>Premio: <strong>${fmt(winAmt)}</strong></p></div>`;
                     } else {
-                        res.innerHTML = `<div style="text-align:center;padding:20px;background:#f8f9fa;border:1px solid #ddd;border-radius:8px;"><h3>Su nº no ha sido premiado</h3></div>`;
+                        res.innerHTML = `<div class="loteria-result-box loteria-result-lose"><h3>Su nº no ha sido premiado</h3></div>`;
                     }
                 }).catch(e => {
                     console.error(e);
@@ -319,7 +324,7 @@ add_action('wp_footer', function() {
 
                 let h = '';
                 pedrea.forEach(n => {
-                    h += `<span style="display:inline-block;padding:6px 10px;background:#f8f9fa;border:1px solid #eee;border-radius:4px;font-family:monospace;font-size:1.1rem;color:#333;font-weight:600;">${n}</span>`;
+                    h += `<span class="loteria-pedrea-item">${n}</span>`;
                 });
                 list.innerHTML = h;
 
@@ -353,14 +358,14 @@ add_action('wp_footer', function() {
                         const obj = (it.i !== undefined && Array.isArray(d[it.k])) ? d[it.k][it.i] : d[it.k];
                         if (obj && obj.decimo) num = obj.decimo;
                     }
-                    h += `<div style="text-align:center;padding:0 15px;border-right:1px solid #eee;min-width:110px;">
-                        <div style="font-size:0.8rem;color:#666;text-transform:uppercase;font-weight:bold;">${it.l}</div>
-                        <div style="font-family:monospace;font-size:1.6rem;font-weight:700;color:#333;margin:4px 0;">${num}</div>
-                        <div style="font-size:0.75rem;color:#999;">${it.v}</div>
+                    h += `<div class="loteria-item-horiz">
+                        <div class="loteria-label-horiz">${it.l}</div>
+                        <div class="loteria-num-horiz">${num}</div>
+                        <div class="loteria-prize-horiz">${it.v}</div>
                     </div>`;
                 });
-                // Remove last border
-                content.innerHTML = h.replace(/border-right:1px solid #eee;min-width:110px;">(?=[^>]*$)/, 'min-width:110px;">');
+                // Remove last border (CSS does it via last-child, but let's keep JS clean)
+                content.innerHTML = h;
             }).catch(console.error);
         });
 
