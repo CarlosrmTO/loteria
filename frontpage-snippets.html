@@ -1,25 +1,14 @@
 <!-- 
-    WIDGETS PARA PORTADA (Versión IFRAME - Garantiza estilos aislados)
+    WIDGETS PARA PORTADA (Versión SHORTCODE - Evita bloqueos de Wordfence)
     
     Instrucciones:
-    1. Instala el plugin subiendo el ZIP.
-    2. Asegúrate de que los archivos 'comprobador-iframe.html' y 'horizontal-iframe.html' 
-       están en la carpeta del plugin: /wp-content/plugins/loteria-navidad-2025/
-    3. Copia el código del IFRAME abajo y pégalo en un bloque "HTML Personalizado" en tu portada.
+    1. Instala y activa el plugin actualizado (v5.3).
+    2. En lugar de pegar código HTML/Iframe que puede ser bloqueado por seguridad,
+       simplemente pega estos SHORTCODES en un bloque "Shortcode" o "Párrafo" en tu portada.
 -->
 
 <!-- OPCIÓN A: WIDGET HORIZONTAL (Premios) -->
-<iframe 
-    src="/wp-content/plugins/loteria-navidad-2025/horizontal-iframe.html" 
-    style="width: 100%; height: 220px; border: none; overflow: hidden;" 
-    scrolling="no"
-    title="Premios Lotería">
-</iframe>
+[loteria_iframe_horizontal]
 
 <!-- OPCIÓN B: COMPROBADOR DE DÉCIMOS -->
-<iframe 
-    src="/wp-content/plugins/loteria-navidad-2025/comprobador-iframe.html" 
-    style="width: 100%; height: 400px; border: none; overflow: hidden;" 
-    scrolling="no"
-    title="Comprobador Lotería">
-</iframe>
+[loteria_iframe_comprobador]

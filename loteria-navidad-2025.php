@@ -183,7 +183,23 @@ add_shortcode('loteria_premios_horizontal', function() {
     <?php return ob_get_clean();
 });
 
-// Shortcode 5: [ELIMINADO] Buscador Administraciones
+// Shortcode 5: iframe Wrapper Comprobador (Avoids Wordfence blocks)
+add_shortcode('loteria_iframe_comprobador', function() {
+    $src = plugins_url('comprobador-iframe.html', __FILE__);
+    return sprintf(
+        '<iframe src="%s" style="width:100%%;height:400px;border:none;overflow:hidden;" scrolling="no" title="Comprobador Lotería"></iframe>',
+        esc_url($src)
+    );
+});
+
+// Shortcode 6: iframe Wrapper Horizontal (Avoids Wordfence blocks)
+add_shortcode('loteria_iframe_horizontal', function() {
+    $src = plugins_url('horizontal-iframe.html', __FILE__);
+    return sprintf(
+        '<iframe src="%s" style="width:100%%;height:220px;border:none;overflow:hidden;" scrolling="no" title="Premios Lotería"></iframe>',
+        esc_url($src)
+    );
+});
 
 // 3. SINGLE UNIFIED JAVASCRIPT (WP_FOOTER)
 add_action('wp_footer', function() {
