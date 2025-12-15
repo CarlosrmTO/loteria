@@ -164,12 +164,14 @@ add_shortcode('loteria_premios_horizontal', function() {
     ob_start();
     ?>
     <div class="loteria-widget loteria-premios-horiz" data-api="<?php echo esc_attr($api); ?>" id="<?php echo $uid; ?>" style="margin:20px 0;font-family:Arial,sans-serif;clear:both;">
-        <div style="background:#fff;border-radius:8px;box-shadow:0 2px 4px rgba(0,0,0,0.1);padding:15px;border-top:3px solid #FFE032;overflow-x:auto;">
-            <div class="loteria-content-horiz" style="display:flex;gap:15px;min-width:600px;justify-content:space-between;align-items:center;">
-                <div class="loteria-loading" style="text-align:center;width:100%;color:#666;">Cargando premios...</div>
+        <div style="background:#fff;border-radius:8px;box-shadow:0 2px 4px rgba(0,0,0,0.1);padding:15px;border-top:3px solid #FFE032;">
+            <div style="overflow-x:auto;padding-bottom:10px;margin-bottom:10px;">
+                <div class="loteria-content-horiz" style="display:flex;gap:15px;min-width:max-content;padding:0 5px;">
+                    <div class="loteria-loading" style="text-align:center;width:100%;color:#666;">Cargando premios...</div>
+                </div>
             </div>
-            <div style="text-align:center;margin-top:10px;">
-                 <button class="loteria-btn-reload" style="background:#f0f0f0;border:none;color:#333;padding:5px 10px;border-radius:4px;cursor:pointer;font-size:0.8rem;">Actualizar</button>
+            <div style="text-align:center;">
+                 <button class="loteria-btn-reload" style="background:#FFE032;border:none;color:black;padding:8px 16px;border-radius:8px;cursor:pointer;font-weight:600;">Actualizar</button>
             </div>
         </div>
     </div>
@@ -339,7 +341,9 @@ add_action('wp_footer', function() {
                 const items = [
                     {l:'Gordo', v:'4M€', k:'primerPremio'},
                     {l:'2º', v:'1.25M€', k:'segundoPremio'},
-                    {l:'3º', v:'500k€', k:'tercerosPremios', i:0}
+                    {l:'3º', v:'500k€', k:'tercerosPremios', i:0},
+                    {l:'4º', v:'200k€', k:'cuartosPremios', i:0},
+                    {l:'5º', v:'60k€', k:'quintosPremios', i:0}
                 ];
 
                 let h = '';
@@ -349,14 +353,14 @@ add_action('wp_footer', function() {
                         const obj = (it.i !== undefined && Array.isArray(d[it.k])) ? d[it.k][it.i] : d[it.k];
                         if (obj && obj.decimo) num = obj.decimo;
                     }
-                    h += `<div style="text-align:center;padding:0 10px;border-right:1px solid #eee;flex:1;">
+                    h += `<div style="text-align:center;padding:0 15px;border-right:1px solid #eee;min-width:110px;">
                         <div style="font-size:0.8rem;color:#666;text-transform:uppercase;font-weight:bold;">${it.l}</div>
-                        <div style="font-family:monospace;font-size:1.4rem;font-weight:700;color:#333;margin:4px 0;">${num}</div>
+                        <div style="font-family:monospace;font-size:1.6rem;font-weight:700;color:#333;margin:4px 0;">${num}</div>
                         <div style="font-size:0.75rem;color:#999;">${it.v}</div>
                     </div>`;
                 });
                 // Remove last border
-                content.innerHTML = h.replace(/border-right:1px solid #eee;flex:1;">(?=[^>]*$)/, 'flex:1;">');
+                content.innerHTML = h.replace(/border-right:1px solid #eee;min-width:110px;">(?=[^>]*$)/, 'min-width:110px;">');
             }).catch(console.error);
         });
 
