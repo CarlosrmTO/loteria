@@ -201,6 +201,41 @@ add_shortcode('loteria_iframe_horizontal', function() {
     );
 });
 
+// 4. GUTENBERG BLOCKS
+add_action('init', function() {
+    // Register JS for Editor
+    wp_register_script(
+        'loteria-navidad-blocks',
+        plugins_url('blocks.js', __FILE__),
+        ['wp-blocks', 'wp-element', 'wp-components', 'wp-editor'],
+        '5.3'
+    );
+
+    // Block 1: Horizontal
+    register_block_type('loteria/horizontal', [
+        'editor_script' => 'loteria-navidad-blocks',
+        'render_callback' => function() {
+            $src = plugins_url('horizontal-iframe.html', __FILE__);
+            return sprintf(
+                '<div class="loteria-block-wrapper"><iframe src="%s" style="width:100%%;height:220px;border:none;overflow:hidden;" scrolling="no" title="Premios Lotería"></iframe></div>',
+                esc_url($src)
+            );
+        }
+    ]);
+
+    // Block 2: Comprobador
+    register_block_type('loteria/comprobador', [
+        'editor_script' => 'loteria-navidad-blocks',
+        'render_callback' => function() {
+            $src = plugins_url('comprobador-iframe.html', __FILE__);
+            return sprintf(
+                '<div class="loteria-block-wrapper"><iframe src="%s" style="width:100%%;height:400px;border:none;overflow:hidden;" scrolling="no" title="Comprobador Lotería"></iframe></div>',
+                esc_url($src)
+            );
+        }
+    ]);
+});
+
 // 3. SINGLE UNIFIED JAVASCRIPT (WP_FOOTER)
 add_action('wp_footer', function() {
     ?>
