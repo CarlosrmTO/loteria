@@ -1,0 +1,130 @@
+<!-- WIDGET LOTERÍA HORIZONTAL (Pegar en módulo HTML de Frontpage) -->
+<style>
+.lot-widget-front {
+    font-family: Arial, sans-serif;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 15px;
+    border-top: 3px solid #FFE032;
+    margin: 20px 0;
+}
+.lot-scroll-container {
+    overflow-x: auto;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    scrollbar-width: thin;
+    scrollbar-color: #FFE032 #f0f0f0;
+}
+.lot-scroll-container::-webkit-scrollbar {
+    height: 8px;
+}
+.lot-scroll-container::-webkit-scrollbar-thumb {
+    background: #FFE032;
+    border-radius: 4px;
+}
+.lot-flex-row {
+    display: flex;
+    gap: 15px;
+    min-width: max-content;
+    padding: 0 5px;
+}
+.lot-item {
+    text-align: center;
+    padding: 0 15px;
+    border-right: 1px solid #eee;
+    min-width: 110px;
+}
+.lot-item:last-child {
+    border-right: none;
+}
+.lot-label {
+    font-size: 0.8rem;
+    color: #666;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+.lot-num {
+    font-family: monospace;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #333;
+    margin: 4px 0;
+}
+.lot-prize {
+    font-size: 0.75rem;
+    color: #999;
+}
+.lot-btn-refresh {
+    background: #FFE032;
+    border: none;
+    color: black;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+.lot-btn-refresh:hover {
+    opacity: 0.9;
+}
+</style>
+
+<div id="loteria-front-widget" class="lot-widget-front">
+    <div class="lot-scroll-container">
+        <div class="lot-flex-row" id="loteria-front-content">
+            <div style="text-align:center;width:100%;color:#666;padding:10px;">Cargando premios...</div>
+        </div>
+    </div>
+    <div style="text-align:center;">
+         <button class="lot-btn-refresh" onclick="location.reload()">Actualizar</button>
+    </div>
+</div>
+
+<script>
+(function() {
+    const content = document.getElementById('loteria-front-content');
+    // URL relativa al proxy del plugin instalado
+    const api = '/wp-json/loteria-navidad/v5/datos/premios';
+
+    fetch(api)
+        .then(r => {
+            if(!r.ok) throw new Error('Error API');
+            return r.json();
+        })
+        .then(d => {
+            if(!d || d.error === 'DEBUG_MODE') return;
+
+            const items = [
+                {l:'Gordo', v:'4M€', k:'primerPremio'},
+                {l:'2º', v:'1.25M€', k:'segundoPremio'},
+                {l:'3º', v:'500k€', k:'tercerosPremios', i:0},
+                {l:'4º', v:'200k€', k:'cuartosPremios', i:0},
+                {l:'5º', v:'60k€', k:'quintosPremios', i:0}
+            ];
+
+            let html = '';
+            items.forEach(it => {
+                let num = '-----';
+                // Lógica de extracción segura
+                if (d[it.k]) {
+                    const obj = (it.i !== undefined && Array.isArray(d[it.k])) ? d[it.k][it.i] : d[it.k];
+                    if (obj && obj.decimo) num = obj.decimo;
+                }
+
+                html += `
+                <div class="lot-item">
+                    <div class="lot-label">${it.l}</div>
+                    <div class="lot-num">${num}</div>
+                    <div class="lot-prize">${it.v}</div>
+                </div>`;
+            });
+
+            content.innerHTML = html;
+        })
+        .catch(err => {
+            console.error(err);
+            content.innerHTML = '<div style="color:red;padding:10px;">Error de conexión</div>';
+        });
+})();
+</script>
