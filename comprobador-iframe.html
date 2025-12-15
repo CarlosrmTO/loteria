@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprobador Lotería</title>
+    <style>
+        body { margin: 0; padding: 0; font-family: Arial, sans-serif; background: transparent; }
+        .loteria-widget { background: transparent; margin: 0; }
+        .loteria-header { text-align: center; margin-bottom: 20px; }
+        .loteria-title { font-size: 1.8rem; color: #1a1a1a; margin: 0 0 5px 0; }
+        .loteria-subtitle { color: #666; margin: 0; font-size: 0.9rem; }
+        .loteria-btn-reload {
+            background: #FFE032; border: none; color: black; padding: 6px 12px;
+            border-radius: 6px; cursor: pointer; margin-top: 10px; font-weight: 600; font-size: 0.85rem;
+        }
+        .loteria-content {
+            background: #fff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 20px; border-top: 4px solid #FFE032;
+        }
+        .loteria-form-check { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+        .loteria-input-group { text-align: left; }
+        .loteria-input-group label { display: block; margin-bottom: 4px; font-weight: 600; font-size: 0.9rem; }
+        .loteria-input { padding: 10px; border: 1px solid #ddd; border-radius: 6px; width: 120px; font-size: 1rem; }
+        .loteria-btn-check {
+            background: #FFE032; color: black; border: none; padding: 10px 20px;
+            border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 1rem;
+        }
+        .loteria-result-box { text-align: center; padding: 15px; border-radius: 8px; margin-top: 15px; }
+        .loteria-result-win { background: #fdfbf7; border: 1px solid #e8dfc8; }
+        .loteria-result-lose { background: #f8f9fa; border: 1px solid #ddd; }
+        .loteria-result-box h3 { margin: 0 0 5px 0; font-size: 1.2rem; }
+        .loteria-result-box p { margin: 0; color: #555; }
+    </style>
+</head>
+<body>
+    <div class="loteria-widget">
+        <div class="loteria-header">
+            <h2 class="loteria-title">Comprobar Lotería</h2>
+            <p class="loteria-subtitle">Introduce tu número y el importe jugado</p>
+            <button class="loteria-btn-reload" onclick="location.reload()">Actualizar</button>
+        </div>
+        <div class="loteria-content">
+            <form id="lot-form" class="loteria-form-check">
+                <div class="loteria-input-group">
+                    <label>Número</label>
+                    <input type="text" name="num" maxlength="5" placeholder="00000" class="loteria-input" required>
+                </div>
+                <div class="loteria-input-group">
+                    <label>Importe (€)</label>
+                    <input type="number" name="amt" value="20" min="1" class="loteria-input" required>
+                </div>
+                <div style="display:flex;align-items:flex-end;">
+                    <button type="submit" class="loteria-btn-check">Comprobar</button>
+                </div>
+            </form>
+            <div id="lot-result"></div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('lot-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const num = this.querySelector('[name=num]').value.padStart(5,'0');
+            const amt = parseFloat(this.querySelector('[name=amt]').value) || 20;
+            const res = document.getElementById('lot-result');
+            
+            res.innerHTML = '<p style="text-align:center;">Comprobando...</p>';
+            
+            // API call relativa al dominio raíz
+            fetch('/wp-json/loteria-navidad/v5/datos/premios')
+                .then(r => r.json())
+                .then(d => {
+                    if(!d || d.error === 'DEBUG_MODE' || !d.compruebe) {
+                        res.innerHTML = '<p style="text-align:center;">Servicio no disponible temporalmente.</p>';
+                        return;
+                    }
+                    const win = d.compruebe.find(i => i.decimo == num);
+                    if(win) {
+                        const winAmt = (win.prize/100/20) * amt;
+                        const fmt = new Intl.NumberFormat('es-ES', {style:'currency', currency:'EUR'}).format(winAmt);
+                        res.innerHTML = `<div class="loteria-result-box loteria-result-win"><h3>¡Enhorabuena!</h3><p>Premio: <strong>${fmt}</strong></p></div>`;
+                    } else {
+                        res.innerHTML = `<div class="loteria-result-box loteria-result-lose"><h3>Su nº no ha sido premiado</h3></div>`;
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    res.innerHTML = '<p style="color:red;text-align:center;">Error de conexión.</p>';
+                });
+        });
+    </script>
+</body>
+</html>
