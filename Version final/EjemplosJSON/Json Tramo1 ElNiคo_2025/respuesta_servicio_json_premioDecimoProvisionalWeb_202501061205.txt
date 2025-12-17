@@ -1,0 +1,378 @@
+﻿// 20250106130531
+// https://www.loteriasyapuestas.es/servicios/premioDecimoProvisionalWeb
+
+{
+  "tipoSorteo": "B",
+  "tipoSorteoGeneral": "B",
+  "fechaSorteo": "2025-01-06T12:00:00.000Z",
+  "drawIdSorteo": "1260909002",
+  "importePorDefecto": 2000,
+  "premioEspecial": {
+    "numero": null,
+    "fraccion": null,
+    "serie": null,
+    "premio": null,
+    "fila": null,
+    "orden": null,
+    "showFolded": false
+  },
+  "listadoPremiosAsociados": {
+    "aproximacion1": {
+      "prize": 120000
+    },
+    "aproximacion2": {
+      "prize": 61000
+    },
+    "aproximacion3": null,
+    "centena1": {
+      "prize": 10000
+    },
+    "centena2": {
+      "prize": 10000
+    },
+    "centena3": {
+      "prize": 10000
+    },
+    "centena41": null,
+    "centena42": null,
+    "terminacion1_4cifras": null,
+    "terminacion1_3cifras": {
+      "prize": 10000
+    },
+    "terminacion1_2cifras": {
+      "prize": 10000
+    },
+    "terminacion2_3cifras": {
+      "prize": 10000
+    },
+    "terminacion2_2cifras": null,
+    "terminacion3_2cifras": null,
+    "reintegro_gordo": {
+      "prize": 2000
+    }
+  },
+  "compruebe": [
+    {
+      "decimo": "078908",
+      "tabla": null,
+      "alambre": null,
+      "literalPremio": null,
+      "ordenFila": null,
+      "fila": null,
+      "orden": null,
+      "prize": 20000000,
+      "prizeType": "G",
+      "showFolded": false
+    },
+    {
+      "decimo": "006766",
+      "tabla": null,
+      "alambre": null,
+      "literalPremio": null,
+      "ordenFila": null,
+      "fila": null,
+      "orden": null,
+      "prize": 7500000,
+      "prizeType": "Z",
+      "showFolded": false
+    },
+    {
+      "decimo": "066777",
+      "tabla": null,
+      "alambre": null,
+      "literalPremio": null,
+      "ordenFila": null,
+      "fila": null,
+      "orden": null,
+      "prize": 2500000,
+      "prizeType": "Y",
+      "showFolded": false
+    },
+    {
+      "decimo": "004276",
+      "tabla": null,
+      "alambre": null,
+      "literalPremio": null,
+      "ordenFila": null,
+      "fila": null,
+      "orden": null,
+      "prize": 35000,
+      "prizeType": "P4",
+      "showFolded": false
+    },
+    {
+      "decimo": "001454",
+      "tabla": null,
+      "alambre": null,
+      "literalPremio": null,
+      "ordenFila": null,
+      "fila": null,
+      "orden": null,
+      "prize": 35000,
+      "prizeType": "P4",
+      "showFolded": false
+    },
+    {
+      "decimo": "000798",
+      "tabla": null,
+      "alambre": null,
+      "literalPremio": null,
+      "ordenFila": null,
+      "fila": null,
+      "orden": null,
+      "prize": 10000,
+      "prizeType": "P3",
+      "showFolded": false
+    },
+    {
+      "decimo": "000824",
+      "tabla": null,
+      "alambre": null,
+      "literalPremio": null,
+      "ordenFila": null,
+      "fila": null,
+      "orden": null,
+      "prize": 10000,
+      "prizeType": "P3",
+      "showFolded": false
+    },
+    {
+      "decimo": "000794",
+      "tabla": null,
+      "alambre": null,
+      "literalPremio": null,
+      "ordenFila": null,
+      "fila": null,
+      "orden": null,
+      "prize": 10000,
+      "prizeType": "P3",
+      "showFolded": false
+    },
+    {
+      "decimo": "000981",
+      "tabla": null,
+      "alambre": null,
+      "literalPremio": null,
+      "ordenFila": null,
+      "fila": null,
+      "orden": null,
+      "prize": 10000,
+      "prizeType": "P3",
+      "showFolded": false
+    },
+    {
+      "decimo": "000307",
+      "tabla": null,
+      "alambre": null,
+      "literalPremio": null,
+      "ordenFila": null,
+      "fila": null,
+      "orden": null,
+      "prize": 10000,
+      "prizeType": "P3",
+      "showFolded": false
+    },
+    {
+      "decimo": "000548",
+      "tabla": null,
+      "alambre": null,
+      "literalPremio": null,
+      "ordenFila": null,
+      "fila": null,
+      "orden": null,
+      "prize": 10000,
+      "prizeType": "P3",
+      "showFolded": false
+    },
+    {
+      "decimo": "000660",
+      "tabla": null,
+      "alambre": null,
+      "literalPremio": null,
+      "ordenFila": null,
+      "fila": null,
+      "orden": null,
+      "prize": 10000,
+      "prizeType": "P3",
+      "showFolded": false
+    },
+    {
+      "decimo": "000366",
+      "tabla": null,
+      "alambre": null,
+      "literalPremio": null,
+      "ordenFila": null,
+      "fila": null,
+      "orden": null,
+      "prize": 10000,
+      "prizeType": "P3",
+      "showFolded": false
+    },
+    {
+      "decimo": "000040",
+      "tabla": null,
+      "alambre": null,
+      "literalPremio": null,
+      "ordenFila": null,
+      "fila": null,
+      "orden": null,
+      "prize": 10000,
+      "prizeType": "P3",
+      "showFolded": false
+    },
+    {
+      "decimo": "000756",
+      "tabla": null,
+      "alambre": null,
+      "literalPremio": null,
+      "ordenFila": null,
+      "fila": null,
+      "orden": null,
+      "prize": 10000,
+      "prizeType": "P3",
+      "showFolded": false
+    },
+    {
+      "decimo": "000899",
+      "tabla": null,
+      "alambre": null,
+      "literalPremio": null,
+      "ordenFila": null,
+      "fila": null,
+      "orden": null,
+      "prize": 10000,
+      "prizeType": "P3",
+      "showFolded": false
+    },
+    {
+      "decimo": "000184",
+      "tabla": null,
+      "alambre": null,
+      "literalPremio": null,
+      "ordenFila": null,
+      "fila": null,
+      "orden": null,
+      "prize": 10000,
+      "prizeType": "P3",
+      "showFolded": false
+    },
+    {
+      "decimo": "000404",
+      "tabla": null,
+      "alambre": null,
+      "literalPremio": null,
+      "ordenFila": null,
+      "fila": null,
+      "orden": null,
+      "prize": 10000,
+      "prizeType": "P3",
+      "showFolded": false
+    },
+    {
+      "decimo": "000306",
+      "tabla": null,
+      "alambre": null,
+      "literalPremio": null,
+      "ordenFila": null,
+      "fila": null,
+      "orden": null,
+      "prize": 10000,
+      "prizeType": "P3",
+      "showFolded": false
+    },
+    {
+      "decimo": "000031",
+      "tabla": null,
+      "alambre": null,
+      "literalPremio": null,
+      "ordenFila": null,
+      "fila": null,
+      "orden": null,
+      "prize": 4000,
+      "prizeType": "P2",
+      "showFolded": false
+    },
+    {
+      "decimo": "000026",
+      "tabla": null,
+      "alambre": null,
+      "literalPremio": null,
+      "ordenFila": null,
+      "fila": null,
+      "orden": null,
+      "prize": 4000,
+      "prizeType": "P2",
+      "showFolded": false
+    },
+    {
+      "decimo": "000089",
+      "tabla": null,
+      "alambre": null,
+      "literalPremio": null,
+      "ordenFila": null,
+      "fila": null,
+      "orden": null,
+      "prize": 4000,
+      "prizeType": "P2",
+      "showFolded": false
+    },
+    {
+      "decimo": "000068",
+      "tabla": null,
+      "alambre": null,
+      "literalPremio": null,
+      "ordenFila": null,
+      "fila": null,
+      "orden": null,
+      "prize": 4000,
+      "prizeType": "P2",
+      "showFolded": false
+    },
+    {
+      "decimo": "000011",
+      "tabla": null,
+      "alambre": null,
+      "literalPremio": null,
+      "ordenFila": null,
+      "fila": null,
+      "orden": null,
+      "prize": 4000,
+      "prizeType": "P2",
+      "showFolded": false
+    },
+    {
+      "decimo": "000005",
+      "tabla": null,
+      "alambre": null,
+      "literalPremio": null,
+      "ordenFila": null,
+      "fila": null,
+      "orden": null,
+      "prize": 2000,
+      "prizeType": "1",
+      "showFolded": false
+    },
+    {
+      "decimo": "000000",
+      "tabla": null,
+      "alambre": null,
+      "literalPremio": null,
+      "ordenFila": null,
+      "fila": null,
+      "orden": null,
+      "prize": 2000,
+      "prizeType": "1",
+      "showFolded": false
+    }
+  ],
+  "urlListadoOficial": null,
+  "literalFechaSorteo": {
+    "es": "lunes 06 de enero de 2025",
+    "ca": "dilluns, 06 / de gener / 2025",
+    "en": "Monday, 06 January 2025",
+    "eu": "astelehena, 2025 urtarrila 06",
+    "gl": "luns 06 xaneiro 2025",
+    "va": "dilluns, 06 / de gener / 2025"
+  },
+  "modelDraw": 113
+}

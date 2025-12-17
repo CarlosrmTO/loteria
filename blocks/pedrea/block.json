@@ -13,6 +13,5 @@
     "html": false,
     "align": ["wide", "full"]
   },
-  "editorScript": "file:./index.js",
-  "render": "file:./render.php"
+  "editorScript": "file:./index.js"
 }

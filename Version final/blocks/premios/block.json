@@ -1,0 +1,18 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "loteria/premios",
+  "version": "1.0.0",
+  "title": "Loteria Premios",
+  "category": "loteria",
+  "icon": "money-alt",
+  "description": "Lista de los 5 premios principales",
+  "keywords": ["loteria", "navidad", "premios", "gordo"],
+  "textdomain": "loteria-navidad",
+  "supports": {
+    "html": false,
+    "align": ["wide", "full"]
+  },
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php"
+}

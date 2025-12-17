@@ -1,0 +1,18 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "loteria/horizontal",
+  "version": "1.0.0",
+  "title": "Loteria Horizontal",
+  "category": "loteria",
+  "icon": "awards",
+  "description": "Muestra los 5 premios principales en formato horizontal",
+  "keywords": ["loteria", "navidad", "sorteo", "premios", "horizontal"],
+  "textdomain": "loteria-navidad",
+  "supports": {
+    "html": false,
+    "align": ["wide", "full"]
+  },
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php"
+}

@@ -1,0 +1,560 @@
+/* LOTERIA NAVIDAD STYLES */
+
+.loteria-widget {
+    font-family: Arial, sans-serif;
+    margin: 40px 0;
+    clear: both;
+    min-height: 100px;
+}
+
+.loteria-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.loteria-title {
+    font-size: 2rem;
+    color: #1a1a1a;
+    margin: 0 0 10px 0;
+}
+
+.loteria-subtitle {
+    color: #666;
+    margin: 0;
+}
+
+.loteria-btn-reload {
+    display: inline-block;
+    background: #FFE032;
+    border: none;
+    color: black;
+    padding: 8px 16px !important;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-weight: 600;
+    transition: all 0.2s;
+    text-decoration: none;
+    line-height: 1.5;
+    box-sizing: border-box;
+    font-size: 14px;
+    vertical-align: middle;
+}
+
+.loteria-btn-reload:hover {
+    color:  #FFE032 !important;
+    background: black !important;
+}
+
+.loteria-content {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    padding: 30px;
+    border-top: 4px solid #FFE032;
+}
+
+.loteria-loading {
+    text-align: center;
+    color: #666;
+    padding: 20px;
+}
+
+/* PREMIOS LIST */
+.loteria-premio-row {
+    padding: 15px;
+    margin: 10px 0;
+    background: #fffaf0;
+    border: 1px solid #e0e0e0;
+    border-left: 5px solid #FFE032;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.loteria-premio-info {
+    flex: 1;
+    min-width: 140px;
+}
+
+.loteria-premio-name {
+    font-size: 1.1em;
+    display: block;
+    margin-bottom: 4px;
+    font-weight: bold;
+}
+
+.loteria-premio-val {
+    color: #666;
+    font-size: 0.9em;
+}
+
+.loteria-premio-num {
+    flex: 1;
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: 700;
+    font-family: monospace;
+    color: #333;
+    min-width: 120px;
+}
+
+.loteria-premio-status {
+    flex: 1;
+    text-align: right;
+    color: #999;
+    font-size: 0.85em;
+    min-width: 100px;
+}
+
+/* COMPROBADOR */
+.loteria-form-check {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.loteria-input-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.loteria-input {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.loteria-btn-check {
+    background: #FFE032;
+    color: black;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.loteria-result-box {
+    text-align: center;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+.loteria-result-win {
+    background: #fdfbf7;
+    border: 1px solid #e8dfc8;
+}
+
+.loteria-result-lose {
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+}
+
+.loteria-result-msg {
+    font-size: 1rem;
+    color: #333;
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+/* PEDREA - TABS */
+.loteria-tabs-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 20px;
+}
+
+.loteria-tab {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    background: #fff;
+    cursor: pointer;
+    font-size: 0.8rem;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.loteria-tab:hover {
+    background: #f5f5f5;
+}
+
+.loteria-tab.active {
+    background: #c41e3a;
+    color: #fff;
+    border-color: #c41e3a;
+}
+
+.loteria-pedrea-range-title h3 {
+    text-align: center;
+    margin: 15px 0;
+    font-size: 1.1rem;
+    color: #333;
+}
+
+/* PEDREA - SCROLL */
+.loteria-pedrea-scroll {
+    overflow-x: auto;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+/* PEDREA TABLE */
+.loteria-pedrea-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+    table-layout: fixed;
+}
+
+.loteria-pedrea-table thead th {
+    background: #f8f9fa;
+    padding: 6px 3px;
+    text-align: center;
+    border: 1px solid #ddd;
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    font-size: 0.8rem;
+}
+
+.loteria-pedrea-cell {
+    padding: 4px 2px;
+    text-align: center;
+    border: 1px solid #eee;
+    font-size: 0.85rem;
+    vertical-align: middle;
+}
+
+.loteria-pedrea-cell.empty {
+    color: #ccc;
+    background: #fafafa;
+}
+
+.loteria-pedrea-cell.filled {
+    background: #fff;
+}
+
+.pedrea-num {
+    font-weight: bold;
+    color: #333;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.pedrea-tipo {
+    color: #666;
+    font-size: 0.75rem;
+    margin-right: 5px;
+}
+
+.pedrea-premio {
+    font-weight: 600;
+}
+
+.pedrea-premio.premio-bajo {
+    color: #666;
+}
+
+.pedrea-premio.premio-medio {
+    color: #c41e3a;
+}
+
+.pedrea-premio.premio-alto {
+    color: #c41e3a;
+    font-weight: bold;
+}
+
+.loteria-pedrea-item {
+    display: inline-block;
+    padding: 6px 10px;
+    background: #f8f9fa;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 1.1rem;
+    color: #333;
+    font-weight: 600;
+}
+
+/* HORIZONTAL WIDGET */
+.loteria-premios-horiz {
+    margin: 20px 0;
+}
+
+.loteria-box-horiz {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    padding: 30px 20px;
+    border-top: 4px solid #FFE032;
+}
+
+.loteria-scroll-container {
+    overflow-x: auto;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    scrollbar-width: thin;
+    scrollbar-color: #FFE032 #f0f0f0;
+}
+
+.loteria-scroll-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.loteria-scroll-container::-webkit-scrollbar-thumb {
+    background: #FFE032;
+    border-radius: 4px;
+}
+
+.loteria-flex-row {
+    display: flex;
+    gap: 0;
+    padding: 0;
+}
+
+.loteria-item-horiz {
+    flex: 1;
+    align-items: center;
+    text-align: center;
+    padding: 0.9375rem 0.75rem;
+    gap: 0.9375rem;
+    position: relative;
+    transition: all 0.25s ease;
+    border-radius: 0.625rem;
+    cursor: pointer;
+}
+
+.loteria-item-horiz:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 20%;
+    height: 60%;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, #d0d0d0 20%, #d0d0d0 80%, transparent);
+}
+
+.loteria-item-horiz:hover {
+    background: rgba(0, 0, 0, 0.025);
+    box-shadow: 2px 3px 6px 2px rgba(0,0,0,0.05);
+}
+
+.loteria-label-horiz {
+    font-size: 1.1rem;
+    color: #666;
+    text-transform: uppercase;
+    font-weight: 800;
+    letter-spacing: 1px;
+    display: block;
+}
+
+.loteria-num-horiz {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #000;
+    margin: 16px 0;
+    letter-spacing: 3px;
+    display: block;
+    line-height: 1;
+}
+
+.loteria-prize-horiz {
+    font-size: 1.15rem;
+    color: #a01729;
+    font-weight: 700;
+    display: block;
+}
+
+/* ============================================
+   RESPONSIVE STYLES
+   ============================================ */
+
+/* Tablet and below (768px) */
+@media (max-width: 768px) {
+    .loteria-widget {
+        margin: 20px 0;
+    }
+
+    .loteria-title {
+        font-size: 1.5rem;
+    }
+
+    .loteria-content {
+        padding: 20px;
+    }
+
+    .loteria-box-horiz {
+        padding: 20px 5px;
+    }
+
+    .loteria-premio-row {
+        padding: 12px;
+    }
+
+    .loteria-premio-num {
+        font-size: 1.5rem;
+    }
+
+    .loteria-item-horiz {
+        padding: 0.75rem 0.5rem;
+    }
+
+    .loteria-label-horiz {
+        font-size: 0.9rem;
+        letter-spacing: 0.5px;
+    }
+
+    .loteria-num-horiz {
+        font-size: 1.3rem;
+        letter-spacing: 2px;
+        margin: 12px 0;
+    }
+
+    .loteria-prize-horiz {
+        font-size: 0.95rem;
+    }
+}
+
+/* Mobile and narrow sidebars (600px) */
+@media (max-width: 600px) {
+    .loteria-title {
+        font-size: 1.3rem;
+    }
+
+    .loteria-content {
+        padding: 15px;
+    }
+
+    .loteria-box-horiz {
+        padding: 15px 2px;
+    }
+
+    /* Stack premio row items vertically */
+    .loteria-premio-row {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .loteria-premio-info,
+    .loteria-premio-num,
+    .loteria-premio-status {
+        text-align: center;
+        min-width: 100%;
+    }
+
+    .loteria-premio-num {
+        font-size: 1.8rem;
+        margin: 10px 0;
+    }
+
+    /* Reduce horizontal items font sizes */
+    .loteria-item-horiz {
+        padding: 0.625rem 0.375rem;
+    }
+
+    .loteria-label-horiz {
+        font-size: 0.75rem;
+        margin-bottom: 8px;
+    }
+
+    .loteria-num-horiz {
+        font-size: 1.1rem;
+        letter-spacing: 1.5px;
+        margin: 10px 0;
+    }
+
+    .loteria-prize-horiz {
+        font-size: 0.85rem;
+    }
+
+    /* Make tabs smaller */
+    .loteria-tab {
+        padding: 6px 10px;
+        font-size: 0.75rem;
+    }
+}
+
+/* Very narrow containers / small phones (400px) */
+@media (max-width: 400px) {
+    .loteria-widget {
+        margin: 15px 0;
+    }
+
+    .loteria-title {
+        font-size: 1.2rem;
+    }
+
+    .loteria-content {
+        padding: 12px;
+        border-radius: 6px;
+    }
+
+    .loteria-box-horiz {
+        padding: 12px 0;
+        border-radius: 6px;
+    }
+
+    /* Further reduce horizontal item sizes */
+    .loteria-item-horiz {
+        padding: 0.5rem 0.25rem;
+    }
+
+    .loteria-item-horiz:not(:last-child)::after {
+        display: none;
+    }
+
+    .loteria-label-horiz {
+        font-size: 0.65rem;
+        margin-bottom: 6px;
+    }
+
+    .loteria-num-horiz {
+        font-size: 0.95rem;
+        letter-spacing: 1px;
+        margin: 8px 0;
+    }
+
+    .loteria-prize-horiz {
+        font-size: 0.75rem;
+    }
+
+    /* Smaller buttons */
+    .loteria-btn-reload,
+    .loteria-btn-check {
+        padding: 8px 12px !important;
+        font-size: 0.9rem !important;
+    }
+
+    /* Reduce premio number size */
+    .loteria-premio-num {
+        font-size: 1.5rem;
+    }
+
+    /* Stack horizontal items vertically on very narrow screens */
+    .loteria-flex-row {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .loteria-item-horiz {
+        border-radius: 8px;
+        padding: 12px;
+        background: rgba(0, 0, 0, 0.015);
+    }
+
+    .loteria-scroll-container {
+        overflow-x: visible;
+    }
+}
