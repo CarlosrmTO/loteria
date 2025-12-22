@@ -28,11 +28,8 @@
         list.push({ n: '2º PREMIO', v: '1.250.000 €', d: getDecimo(data.segundoPremio) });
         // 3. TERCERO
         list.push({ n: '3º PREMIO', v: '500.000 €', d: (data.tercerosPremios && data.tercerosPremios[0]) ? data.tercerosPremios[0].decimo : null });
-        // 4. CUARTO
-        list.push({ n: '4º PREMIO', v: '200.000 €', d: (data.cuartosPremios && data.cuartosPremios[0]) ? data.cuartosPremios[0].decimo : null });
-        // 5. QUINTO
-        list.push({ n: '5º PREMIO', v: '60.000 €', d: (data.quintosPremios && data.quintosPremios[0]) ? data.quintosPremios[0].decimo : null });
-
+        
+        // Render Main Prizes (G, 2, 3)
         let html = '';
         list.forEach(item => {
             const num = item.d || '-----';
@@ -47,22 +44,61 @@
                 <div class="loteria-premio-status">${status}</div>
             </div>`;
         });
+
+        // 4. CUARTOS (2 premios) - Compacto
+        html += '<div class="loteria-compact-section">';
+        html += '<span class="loteria-compact-title">4º PREMIOS</span>';
+        html += '<span class="loteria-compact-val">200.000 €</span>';
+        html += '<div class="loteria-compact-grid">';
+        for(let i=0; i<2; i++) {
+            const decimo = (data.cuartosPremios && data.cuartosPremios[i] && data.cuartosPremios[i].decimo) ? data.cuartosPremios[i].decimo : '-----';
+            html += `<div class="loteria-compact-num">${decimo}</div>`;
+        }
+        html += '</div></div>';
+
+        // 5. QUINTOS (8 premios) - Compacto
+        html += '<div class="loteria-compact-section">';
+        html += '<span class="loteria-compact-title">5º PREMIOS</span>';
+        html += '<span class="loteria-compact-val">60.000 €</span>';
+        html += '<div class="loteria-compact-grid">';
+        for(let i=0; i<8; i++) {
+            const decimo = (data.quintosPremios && data.quintosPremios[i] && data.quintosPremios[i].decimo) ? data.quintosPremios[i].decimo : '-----';
+            html += `<div class="loteria-compact-num">${decimo}</div>`;
+        }
+        html += '</div></div>';
+
         container.innerHTML = html;
     };
 
     document.querySelectorAll('.loteria-premios').forEach(w => {
+        console.log('Loteria Widget found:', w);
         const api = w.dataset.api;
+        console.log('API URL:', api);
         const content = w.querySelector('.loteria-content');
+        console.log('Content element:', content);
         const btn = w.querySelector('.loteria-btn-reload');
         if(btn) btn.onclick = () => location.reload();
 
-        if(!content || !api) return;
+        if(!content || !api) {
+            console.error('Missing content or api:', {content, api});
+            return;
+        }
 
-        fetch(api).then(r => r.json()).then(d => {
+        console.log('Fetching from:', api);
+        fetch(api).then(r => {
+            console.log('Fetch response:', r);
+            return r.json();
+        }).then(d => {
             if(d.error === 'DEBUG_MODE') return;
+            console.log('Loteria API Data:', d);
+            console.log('primerPremio:', d.primerPremio);
+            console.log('segundoPremio:', d.segundoPremio);
+            console.log('tercerosPremios:', d.tercerosPremios);
+            console.log('cuartosPremios:', d.cuartosPremios);
+            console.log('quintosPremios:', d.quintosPremios);
             renderPremios(content, d);
         }).catch(err => {
-            console.error(err);
+            console.error('Fetch error:', err);
             content.innerHTML = '<p style="color:red;text-align:center">Error cargando datos</p>';
         });
     });
@@ -102,11 +138,34 @@
                 // 1. Directo
                 const direct = d.compruebe ? d.compruebe.find(x => x.decimo == num) : null;
                 if(direct && direct.prize) {
-                    totalPrize += (direct.prize / 100);
-                    won.push(`Premio Directo: ${fmt(direct.prize/100)}`);
+                    // SELAE returns prize in cents (céntimos)
+                    // Pedrea (P5) is 100€ per décimo, NOT 120€
+                    // 120€ only happens when pedrea (100€) + reintegro (20€) are combined
+                    let prizeAmount = direct.prize / 100; // Convert from cents to euros
+                    
+                    totalPrize += prizeAmount;
+                    
+                    let typeName = 'Premio';
+                    if(direct.prizeType) {
+                        const types = {
+                            'G': 'El Gordo', 'Z': '2º Premio', 'Y': '3º Premio',
+                            'H': '4º Premio', 'I': '5º Premio', 'P5': 'Pedrea'
+                        };
+                        typeName = types[direct.prizeType] || 'Premio';
+                    }
+                    won.push(`${typeName}: ${fmt(prizeAmount)}`);
                 }
 
-                // 2. Logica Aprox / Centenas / Terminaciones / Reintegro
+                // 2. Check for Reintegro (last digit matches El Gordo)
+                const gordo = d.primerPremio?.decimo;
+                if(gordo && num.slice(-1) === gordo.slice(-1)) {
+                    const reintegro = d.listadoPremiosAsociados?.reintegro_gordo?.prize || 2000; // 2000 cents = 20€
+                    const reintegroAmount = reintegro / 100;
+                    totalPrize += reintegroAmount;
+                    won.push(`Reintegro: ${fmt(reintegroAmount)}`);
+                }
+
+                // 3. Logica Aprox / Centenas / Terminaciones
                 // (Simplificada para robustez: si hay "listadoPremiosAsociados", usamos eso)
                 const ax = d.listadoPremiosAsociados || {};
                 
@@ -268,12 +327,27 @@
         fetch(api).then(r => r.json()).then(d => {
             if(!d.compruebe) return;
 
+            // Get El Gordo's last digit for reintegro calculation
+            const gordo = d.primerPremio?.decimo;
+            const gordoLastDigit = gordo ? gordo.slice(-1) : null;
+            const reintegroAmount = d.listadoPremiosAsociados?.reintegro_gordo?.prize ? 
+                d.listadoPremiosAsociados.reintegro_gordo.prize / 100 : 20; // 20€ default
+
             // Procesar todos los premios - prize está en céntimos
-            allPremios = d.compruebe.map(x => ({
-                numero: x.decimo,
-                premio: parseInt(x.prize) / 100, // Convertir de céntimos a euros
-                tipo: getTipo(x.prizeType)
-            })).sort((a,b) => parseInt(a.numero) - parseInt(b.numero));
+            allPremios = d.compruebe.map(x => {
+                let premio = parseInt(x.prize) / 100; // Convertir de céntimos a euros
+                
+                // Check if this number has reintegro (last digit matches El Gordo)
+                if(gordoLastDigit && x.decimo && x.decimo.slice(-1) === gordoLastDigit) {
+                    premio += reintegroAmount; // Add reintegro (20€)
+                }
+                
+                return {
+                    numero: x.decimo,
+                    premio: premio,
+                    tipo: getTipo(x.prizeType)
+                };
+            }).sort((a,b) => parseInt(a.numero) - parseInt(b.numero));
 
             renderTable();
         }).catch(err => {
@@ -297,21 +371,56 @@
             const list = [];
             const getDec = (o) => (o && o.decimo) ? o.decimo : null;
 
-            list.push({ l:'Gordo', v:'4M€', d: getDec(d.primerPremio) });
-            list.push({ l:'2º', v:'1.25M€', d: getDec(d.segundoPremio) });
-            list.push({ l:'3º', v:'500k€', d: (d.tercerosPremios && d.tercerosPremios[0]) ? d.tercerosPremios[0].decimo : null });
-            list.push({ l:'4º', v:'200k€', d: (d.cuartosPremios && d.cuartosPremios[0]) ? d.cuartosPremios[0].decimo : null });
-            list.push({ l:'5º', v:'60k€', d: (d.quintosPremios && d.quintosPremios[0]) ? d.quintosPremios[0].decimo : null });
+            // 1. GORDO
+            list.push({ l:'El Gordo', v:'4.000.000€', d: getDec(d.primerPremio), type: 'single' });
+            // 2. SEGUNDO
+            list.push({ l:'2º Premio', v:'1.250.000€', d: getDec(d.segundoPremio), type: 'single' });
+            // 3. TERCERO
+            list.push({ l:'3º Premio', v:'500.000€', d: (d.tercerosPremios && d.tercerosPremios[0]) ? d.tercerosPremios[0].decimo : null, type: 'single' });
+            
+            // 4. CUARTOS (2 premios) -> Grouped
+            const cuartos = [];
+            for(let i=0; i<2; i++) {
+                cuartos.push((d.cuartosPremios && d.cuartosPremios[i] && d.cuartosPremios[i].decimo) ? d.cuartosPremios[i].decimo : '-----');
+            }
+            list.push({ l:'4º Premio', v:'200.000€', data: cuartos, type: 'group-4' });
+
+            // 5. QUINTOS (8 premios) -> Grouped
+            const quintos = [];
+            for(let i=0; i<8; i++) {
+                quintos.push((d.quintosPremios && d.quintosPremios[i] && d.quintosPremios[i].decimo) ? d.quintosPremios[i].decimo : '-----');
+            }
+            list.push({ l:'5º Premio', v:'60.000€', data: quintos, type: 'group-5' });
 
             let html = '';
             list.forEach(it => {
-                const num = it.d || '-----';
-                html += `
-                <div class="loteria-item-horiz">
-                    <div class="loteria-label-horiz">${it.l}</div>
-                    <div class="loteria-num-horiz">${num}</div>
-                    <div class="loteria-prize-horiz">${it.v}</div>
-                </div>`;
+                if(it.type === 'single') {
+                    const num = it.d || '-----';
+                    html += `
+                    <div class="loteria-item-horiz single">
+                        <div class="loteria-label-horiz">${it.l}</div>
+                        <div class="loteria-num-horiz main-num">${num}</div>
+                        <div class="loteria-prize-horiz">${it.v}</div>
+                    </div>`;
+                } else if (it.type === 'group-4') {
+                    html += `
+                    <div class="loteria-item-horiz group-4">
+                        <div class="loteria-label-horiz">${it.l}</div>
+                        <div class="loteria-grid-4">
+                            ${it.data.map(n => `<span class="mini-num">${n}</span>`).join('')}
+                        </div>
+                        <div class="loteria-prize-horiz">${it.v}</div>
+                    </div>`;
+                } else if (it.type === 'group-5') {
+                    html += `
+                    <div class="loteria-item-horiz group-5">
+                        <div class="loteria-label-horiz">${it.l}</div>
+                        <div class="loteria-grid-5">
+                            ${it.data.map(n => `<span class="mini-num">${n}</span>`).join('')}
+                        </div>
+                        <div class="loteria-prize-horiz">${it.v}</div>
+                    </div>`;
+                }
             });
             content.innerHTML = html;
         });

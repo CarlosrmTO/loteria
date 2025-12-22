@@ -3,7 +3,7 @@
  * Plugin Name: Loteria Navidad 2025
  * Plugin URI: https://theobjective.com
  * Description: Widgets de lotería nativos (Gutenberg + Shortcodes) con lógica avanzada de comprobación.
- * Version: 8.0
+ * Version: 8.6.6
  * Author: CR
  * Author URI: https://theobjective.com
  * Text Domain: loteria-navidad
@@ -19,7 +19,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants
-define('LOTERIA_NAVIDAD_VERSION', '8.0');
+define('LOTERIA_NAVIDAD_VERSION', '8.6.6');
 define('LOTERIA_NAVIDAD_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('LOTERIA_NAVIDAD_PLUGIN_URL', plugin_dir_url(__FILE__));
 
